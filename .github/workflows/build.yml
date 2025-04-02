@@ -23,6 +23,25 @@ jobs:
       fail-fast: false
       matrix:
         settings:
+                  # 新增 armv7l 架构的 Linux 目标（GNU 和 MUSL）
+          - target: armv7-unknown-linux-gnueabihf  # ARMv7 32位 + GNU C库
+            host: ubuntu-latest
+            build: |
+              cargo install cross --force --git https://github.com/cross-rs/cross
+              cross build --release --target armv7-unknown-linux-gnueabihf
+              mkdir build
+              cp target/armv7-unknown-linux-gnueabihf/release/wol build/wol
+              strip -x build/wol
+
+          - target: armv7-unknown-linux-musleabihf  # ARMv7 32位 + MUSL C库
+            host: ubuntu-latest
+            build: |
+              cargo install cross --force --git https://github.com/cross-rs/cross
+              cross build --release --target armv7-unknown-linux-musleabihf
+              mkdir build
+              cp target/armv7-unknown-linux-musleabihf/release/wol build/wol
+              strip -x build/wol
+
           - target: x86_64-apple-darwin
             host: macos-latest
             build: |
